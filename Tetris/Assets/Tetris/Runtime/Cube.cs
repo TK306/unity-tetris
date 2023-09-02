@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tetris
+namespace Tetris.Core
 {
     public class Cube : MonoBehaviour
     {

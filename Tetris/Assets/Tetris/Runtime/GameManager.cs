@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Tetris
+namespace Tetris.Core
 {
     public class GameManager : MonoBehaviour
     {
@@ -30,6 +30,8 @@ namespace Tetris
         bool _isFalling;
         int _tickCount;
 
+        public bool IsPlaying { get; private set; } = false;
+
         void Awake()
         {
             PlayerInput playerInput = GetComponent<PlayerInput>();
@@ -43,13 +45,23 @@ namespace Tetris
         void Start()
         {
             Debug.Log("Start");
-            _preTickTime = DateTime.Now;
-            _tickCount = 0;
+        }
+
+        [ContextMenu("StartGame")]
+        public void StartGame()
+        {
+            IsPlaying = true;
+            InitializeGame();
             PrepareNextBlock();
         }
 
         void Update()
         {
+            if (!IsPlaying)
+            {
+                return;
+            }
+
             Input();
             Level();
 
@@ -199,7 +211,7 @@ namespace Tetris
         {
             int i = UnityEngine.Random.Range(0, _blockArray.Length);
             _nextBlock = Instantiate(_blockArray[i], _nextBlockPoint.position, Quaternion.identity);
-            _nextBlock.gameObject.transform.parent = _grid.gameObject.transform;
+            _nextBlock.gameObject.transform.parent = _grid.gameObject.transform.Find("Blocks");
             _nextBlock.InjectGrid(_grid);
         }
 
@@ -240,11 +252,14 @@ namespace Tetris
 
         void GameOver()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
-#else
-            Application.Quit();//ゲームプレイ終了
-#endif
+            IsPlaying = false;
+        }
+
+        void InitializeGame()
+        {
+            _preTickTime = DateTime.Now;
+            _tickCount = 0;
+            _grid.Reset();
         }
 
         void FillGrid()
@@ -267,6 +282,15 @@ namespace Tetris
                 }
             }
             _grid.CheckLines();
+        }
+
+        void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else
+            Application.Quit();//ゲームプレイ終了
+#endif
         }
     }
 }

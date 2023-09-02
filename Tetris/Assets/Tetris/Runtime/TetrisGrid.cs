@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tetris
+namespace Tetris.Core
 {
     public class TetrisGrid : MonoBehaviour
     {
@@ -12,11 +12,11 @@ namespace Tetris
         [SerializeField]
         float _gridWidth = 1f;
         Cube[,] _gridArray;
-        int _dropLineIndex = -1;
+        int _dropLineIndex;
 
-        public int LineCount { get; private set; } = 0;
+        public int LineCount { get; private set; }
 
-        List<GameObject> _destroyCollection = new List<GameObject>();
+        List<GameObject> _destroyCollection;
         Mode _mode = Mode.Idle;
         enum Mode
         {
@@ -36,6 +36,17 @@ namespace Tetris
         public void CheckLines()
         {
             _mode = Mode.CheckLine;
+        }
+
+        public void Reset()
+        {
+            _gridArray = new Cube[_gridSize.x, _gridSize.y];
+            _destroyCollection = new List<GameObject>();
+            LineCount = 0;
+            foreach (Transform block in this.gameObject.transform.Find("Blocks"))
+            {
+                Destroy(block.gameObject);
+            }
         }
 
         public Vector3 GridToWorld(Vector2Int gridPos)
@@ -136,11 +147,6 @@ namespace Tetris
                 }
             }
             _mode = Mode.CheckLine;
-        }
-
-        void Start()
-        {
-            _gridArray = new Cube[_gridSize.x, _gridSize.y];
         }
     }
 }
