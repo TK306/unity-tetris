@@ -23,6 +23,8 @@ namespace Tetris.Core
         InputAction _stackAction;
         [SerializeField]
         float _tps = 1f;
+        int _score;
+        int _level;
         DateTime _preTickTime;
         BlockBase _nextBlock;
         BlockBase _movingBlock;
@@ -31,6 +33,16 @@ namespace Tetris.Core
         int _tickCount;
 
         public bool IsPlaying { get; private set; } = false;
+
+        public int Level
+        {
+            get { return _level; }
+        }
+
+        public int Score
+        {
+            get { return _score; }
+        }
 
         void Awake()
         {
@@ -63,7 +75,7 @@ namespace Tetris.Core
             }
 
             Input();
-            Level();
+            UpdateTPS();
 
             FallUpdate();
             if ((DateTime.Now - _preTickTime).TotalMilliseconds > 1000.0f / _tps)
@@ -73,13 +85,14 @@ namespace Tetris.Core
             }
         }
 
-        void Level()
+        void UpdateTPS()
         {
             float minTps = 1f;
             float maxTps = 5f;
             float maxLine = 100;
+            _score = _grid.LineCount;
             _tps = (float)_grid.LineCount * (maxTps - minTps) / maxLine + minTps;
-            Debug.Log($"LEVEL: {_tps}");
+            _level = (int)Mathf.Floor((_tps - 1) * 10) + 1;
         }
 
         void Tick()

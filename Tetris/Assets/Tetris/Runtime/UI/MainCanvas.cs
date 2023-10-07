@@ -11,6 +11,8 @@ namespace Tetris.UI
         Core.GameManager _gameManager;
         [SerializeField]
         UnityEngine.UI.Button _restartButton;
+        [SerializeField]
+        TMP_Text _scoreText;
 
         void Start()
         {
@@ -20,6 +22,12 @@ namespace Tetris.UI
         void Update()
         {
             _restartButton.gameObject.SetActive(!_gameManager.IsPlaying);
+            UpdateScoreText();
+        }
+
+        void UpdateScoreText()
+        {
+            _scoreText.text = $"Score: {_gameManager.Score} / Level: {_gameManager.Level}";
         }
 
         public void OnClickedRestartButton()
