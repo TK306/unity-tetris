@@ -26,8 +26,11 @@ namespace Tetris.Core
         int _score;
         int _level;
         DateTime _preTickTime;
+        [SerializeField]
         BlockBase _nextBlock;
+        [SerializeField]
         BlockBase _movingBlock;
+        [SerializeField]
         BlockBase _stackedBlock;
         bool _isFalling;
         int _tickCount;
@@ -188,8 +191,8 @@ namespace Tetris.Core
                 BlockBase buff = _movingBlock;
                 _movingBlock = _stackedBlock;
                 SetMovingToCube(_movingBlock, true);
-                SetMovingToCube(_stackedBlock, false);
                 _stackedBlock = buff;
+                SetMovingToCube(_stackedBlock, false);
                 _movingBlock.InitialGridPos(buff.GridPos);
                 Debug.Log($"Stacked: {_stackedBlock.name}");
                 Debug.Log($"Moving: {_movingBlock.name}");

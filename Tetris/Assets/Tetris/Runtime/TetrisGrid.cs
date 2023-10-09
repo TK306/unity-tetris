@@ -9,8 +9,8 @@ namespace Tetris.Core
     {
         [SerializeField]
         Vector2Int _gridSize = new Vector2Int(10, 20);
-        [SerializeField]
-        float _gridWidth = 1f;
+        // [SerializeField]
+        // float _gridWidth = 1f;
         Cube[,] _gridArray;
         int _dropLineIndex;
 
@@ -25,13 +25,13 @@ namespace Tetris.Core
             LineDrop
         }
 
-        public float GridWidth
-        {
-            get
-            {
-                return _gridWidth;
-            }
-        }
+        // public float GridWidth
+        // {
+        //     get
+        //     {
+        //         return _gridWidth;
+        //     }
+        // }
 
         public void CheckLines()
         {
