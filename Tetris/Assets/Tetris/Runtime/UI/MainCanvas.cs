@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using TMPro;
 
 namespace Tetris.UI
@@ -13,10 +14,25 @@ namespace Tetris.UI
         UnityEngine.UI.Button _restartButton;
         [SerializeField]
         TMP_Text _scoreText;
+        [SerializeField]
+        RectTransform[] _touchUI;
 
         void Start()
         {
+            // キーボードが接続されているかを検出
+            InputDevice keyboard = InputSystem.GetDevice<Keyboard>();
+            bool isKeyboardConnected = (keyboard != null);
+            TriggerTouchUI(!isKeyboardConnected);
+
             _gameManager.StartGame();
+        }
+
+        void TriggerTouchUI(bool isOn)
+        {
+            foreach (RectTransform ui in _touchUI)
+            {
+                ui.gameObject.SetActive(isOn);
+            }
         }
 
         void Update()

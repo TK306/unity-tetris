@@ -121,6 +121,8 @@ MonoBehaviour:
   _gameManager: {fileID: 0}
   _restartButton: {fileID: 8160127086978836668}
   _scoreText: {fileID: 2434221813289763859}
+  _touchUI:
+  - {fileID: 5439854905855858074}
 --- !u!1 &582452612437851489
 GameObject:
   m_ObjectHideFlags: 0
