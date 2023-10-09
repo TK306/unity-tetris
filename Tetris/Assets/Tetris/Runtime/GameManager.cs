@@ -26,6 +26,7 @@ namespace Tetris.Core
         int _score;
         int _level;
         DateTime _preTickTime;
+        DateTime _preInputTickTime;
         [SerializeField]
         BlockBase _nextBlock;
         [SerializeField]
@@ -34,6 +35,10 @@ namespace Tetris.Core
         BlockBase _stackedBlock;
         bool _isFalling;
         int _tickCount;
+        bool _moveRightInput;
+        bool _moveLeftInput;
+        [SerializeField]
+        float _inputTps = 10f;
 
         public bool IsPlaying { get; private set; } = false;
 
@@ -78,6 +83,11 @@ namespace Tetris.Core
             }
 
             Input();
+            if ((DateTime.Now - _preInputTickTime).TotalMilliseconds > 1000.0f / _inputTps)
+            {
+                InputTick();
+            }
+
             UpdateTPS();
 
             FallUpdate();
@@ -121,9 +131,10 @@ namespace Tetris.Core
             }
         }
 
-        void Input()
+        void InputTick()
         {
-            if (_moveRightAction.WasPressedThisFrame())
+            _preInputTickTime = DateTime.Now;
+            if (_moveRightInput)
             {
                 if (CheckMoveable(new Vector2Int(1, 0)))
                 {
@@ -136,7 +147,7 @@ namespace Tetris.Core
                 }
             }
 
-            if (_moveLeftAction.WasPressedThisFrame())
+            if (_moveLeftInput)
             {
                 if (CheckMoveable(new Vector2Int(-1, 0)))
                 {
@@ -147,6 +158,33 @@ namespace Tetris.Core
                 {
                     Debug.Log("LeftEdge");
                 }
+            }
+        }
+
+        void Input()
+        {
+            if (_moveRightAction.WasPressedThisFrame())
+            {
+                _moveRightInput = true;
+                _moveLeftInput = false;
+                InputTick();
+            }
+
+            if (_moveRightAction.WasReleasedThisFrame())
+            {
+                _moveRightInput = false;
+            }
+
+            if (_moveLeftAction.WasPressedThisFrame())
+            {
+                _moveRightInput = false;
+                _moveLeftInput = true;
+                InputTick();
+            }
+
+            if (_moveLeftAction.WasReleasedThisFrame())
+            {
+                _moveLeftInput = false;
             }
 
             if (_fallAction.WasPressedThisFrame())
