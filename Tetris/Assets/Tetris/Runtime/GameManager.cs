@@ -111,6 +111,7 @@ namespace Tetris.Core
                 }
                 else
                 {
+                    SetMovingToCube(_movingBlock, false);
                     FillGrid();
                     _movingBlock = null;
                 }
@@ -178,6 +179,7 @@ namespace Tetris.Core
             if (_stackedBlock == null)
             {
                 _stackedBlock = _movingBlock;
+                SetMovingToCube(_stackedBlock, false);
                 _movingBlock = null;
                 GenerateNewBlock();
             }
@@ -185,8 +187,12 @@ namespace Tetris.Core
             {
                 BlockBase buff = _movingBlock;
                 _movingBlock = _stackedBlock;
+                SetMovingToCube(_movingBlock, true);
+                SetMovingToCube(_stackedBlock, false);
                 _stackedBlock = buff;
                 _movingBlock.InitialGridPos(buff.GridPos);
+                Debug.Log($"Stacked: {_stackedBlock.name}");
+                Debug.Log($"Moving: {_movingBlock.name}");
             }
 
             _stackedBlock.Stack(_stackedBlockPoint.position);
@@ -206,6 +212,7 @@ namespace Tetris.Core
             {
                 FillGrid();
                 _isFalling = false;
+                SetMovingToCube(_movingBlock, false);
                 _movingBlock = null;
             }
         }
@@ -214,6 +221,7 @@ namespace Tetris.Core
         {
             Debug.Log("GenerateNewBlock");
             _movingBlock = _nextBlock;
+            SetMovingToCube(_movingBlock, true);
             _nextBlock = null;
             _movingBlock.gameObject.transform.position = new Vector3(0, 0, 0);
             _movingBlock.InitialGridPos(new Vector2Int(5, 0));
@@ -243,6 +251,13 @@ namespace Tetris.Core
                 }
             }
             return true;
+        }
+
+        static void SetMovingToCube(BlockBase block, bool isMoving)
+        {
+            foreach (Cube cube in block.Cubes)
+                if (cube != null)
+                    cube.IsMoving = isMoving;
         }
 
         bool CheckRotatable()

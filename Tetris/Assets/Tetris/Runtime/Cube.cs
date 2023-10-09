@@ -9,6 +9,7 @@ namespace Tetris.Core
         [SerializeField]
         Vector2Int _gridPos;
         TetrisGrid _grid;
+        public bool IsMoving = false;
         public Vector2Int GridPos
         {
             get
