@@ -17,6 +17,7 @@ namespace Tetris.Core
             g.transform.parent = transform;
             _lineRenderer = g.AddComponent<LineRenderer>();
             _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            _lineRenderer.enabled = false;
         }
 
         void Update()
@@ -40,6 +41,7 @@ namespace Tetris.Core
                 start,
                 end
             };
+            _lineRenderer.enabled = true;
             _lineRenderer.SetPositions(pos);
             _lineRenderer.startColor = _color;
             _lineRenderer.endColor = _color;
@@ -49,8 +51,7 @@ namespace Tetris.Core
 
         void ClearRay()
         {
-            _lineRenderer.startWidth = 0f;
-            _lineRenderer.endWidth = 0f;
+            _lineRenderer.enabled = false;
         }
 
         void OnDestroy()
