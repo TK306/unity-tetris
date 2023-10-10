@@ -16,12 +16,15 @@ namespace Tetris.UI
         TMP_Text _scoreText;
         [SerializeField]
         RectTransform[] _touchUI;
+        [SerializeField]
+        ToggleButton _toggleButton;
 
         void Start()
         {
             // キーボードが接続されているかを検出
             InputDevice keyboard = InputSystem.GetDevice<Keyboard>();
             bool isKeyboardConnected = (keyboard != null);
+            _toggleButton.SetToggle(!isKeyboardConnected);
             TriggerTouchUI(!isKeyboardConnected);
 
             _gameManager.StartGame();
@@ -39,6 +42,8 @@ namespace Tetris.UI
         {
             _restartButton.gameObject.SetActive(!_gameManager.IsPlaying);
             UpdateScoreText();
+
+            TriggerTouchUI(_toggleButton.IsOn);
         }
 
         void UpdateScoreText()
